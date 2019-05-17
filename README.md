@@ -7,20 +7,20 @@ Deployed on AWS at: http://siltonfoundationapp-env.tv6vfag29m.us-west-2.elasticb
 To build and run this page locally (using Visual Studio and SQL Server):
 1. Clone the repo locally and compile it. There are no additional external dependencies or data sources to load/access.
 2. Build an AWS Elastic Beanstalk app using .NET 4.0 runtime and an RDS instance using SQL Server (t2.micro).
-3. This application builds DB connection strings using env vars from appsettings.json. Add these to your appsettings.json, and add them to your AWS app's 'Environment Properties":
+3. This application builds DB connection strings using env vars from appsettings.json. Add these to your appsettings.json, and add them to your AWS app's 'Environment Properties":  
     {  
-      "RDS_HOSTNAME": "copy/paste your AWS.RDS instance Endpoint here",
-      "RDS_USERNAME": "enter the username you selected for your AWS.RDS instance here"
-      "RDS_PASSWORD": "enter the password you selected for your AWS.RDS instance here",
-      "RDS_DBNAME_USER": "SiltonUser",
-      "RDS_DBNAME_SCHOL": "SiltonScholarship",
+      "RDS_HOSTNAME": "copy/paste your AWS.RDS instance Endpoint here",  
+      "RDS_USERNAME": "enter the username you selected for your AWS.RDS instance here"  
+      "RDS_PASSWORD": "enter the password you selected for your AWS.RDS instance here",  
+      "RDS_DBNAME_USER": "SiltonUser",  
+      "RDS_DBNAME_SCHOL": "SiltonScholarship",  
     }
-
-3. Build the scholarships database using existing migration (Update-Database -Context ScholarshipDbContext).
-4. Build the users database using existing migration (Update-Database -Context AppUserDbContext).
-5. Deploy the app to AWS using the AWSSDK, the online console, or the CLI (per your preference).
+  
+4. Build the scholarships database using existing migration (Update-Database -Context ScholarshipDbContext).
+5. Build the users database using existing migration (Update-Database -Context AppUserDbContext).
+6. Deploy the app to AWS using the AWSSDK, the online console, or the CLI (per your preference).
 Alternately, replace the connection string builders with local connection strings (with same DB names), run via your local/live server.  
-6. Register a new user using the email address 'admin@thesiltonfoundation.org'. This will be a perpetual admin user, which initiates your ability to manage user roles in your database. 
+7. Register a new user using the email address 'admin@thesiltonfoundation.org'. This will be a perpetual admin user, which initiates your ability to manage user roles in your database. 
 
 
 ## Architecture
