@@ -1,0 +1,114 @@
+﻿@page
+@model SiltonFoundation.Pages.Admin.IndexModel
+@using  SiltonFoundation.Models;
+@{
+    Layout = "_Layout";
+}
+
+<h2>Admin Dashboard</h2>
+@*TODO: Activate this link when Evaluator Dashboard is deployed*@
+@*<h4><a asp-controller="Evaluator" asp-action="Index">View Evaluator Dashboard</a></h4>*@
+
+<section class="dash-section">
+    <h3>Manage Profile</h3>
+    @if (Model.UpdateProfileVM == null)
+    {
+        <form class="usermgmt" method="post">
+            <input type="hidden" asp-for="ManagedUserEmail" value="@User.Identity.Name" />
+            <button type="submit" asp-page-handler="GetProfile">Update My Profile</button>
+        </form>
+    }
+    else
+    {
+        <partial name="_UpdateProfilePartial" model="Model.UpdateProfileVM" />
+    }
+</section>
+
+<section class="dash-section">
+    <h3>Manage User Roles</h3>
+    <partial name="_ManageBoardPartial" />
+</section>
+
+<section class="dash-section">
+    <h3>Applications Queue (current year)</h3>
+
+    <partial name="_AppQueuePartial" model="Model"/>
+</section>
+
+<section class="dash-section">
+    <h3>View & Evaluate Applications</h3>
+    <a asp-page-handler="Index">Click to close application view</a>
+    <form class="usermgmt" method="post">
+
+        <fieldset>
+            <select asp-for="ApplicantEmail">
+                <option value="null">(Select application to view)</option>
+                @foreach (AppUser appUser in Model.Applicants)
+                {
+                    <option value="@appUser.Email">@appUser.FirstName @appUser.LastName (@appUser.Email)</option>
+                }
+            </select>
+            <button type="submit" asp-page-handler="GetAppl">View Application</button>
+        </fieldset>
+    </form>
+    @if (Model.ApplicantEmail != null)
+    {
+        @if (Model.SFAppVM != null)
+        {
+            <partial name="_ApplicationPartial" model="Model.SFAppVM" />
+        }
+        else
+        {
+            <p>No applications found for this user.</p>
+        }
+    }
+</section>
+
+<section class="dash-section">
+    <h3>View & Manage Awards (by year range)</h3>
+    <p>This feature is not yet available.</p>
+    @*TODO: Build/activate this form when evaluation features are deployed*@
+
+</section>
+
+<section class="dash-section">
+    <h3>View & Manage Application Questions</h3>
+    <h3>(DEMO ONLY: This feature is not yet available.)</h3>
+
+    @*TODO: Build/activate this form when evaluation features are deployed*@
+    
+    
+    @if (Model.AllQuestions == null)
+    {
+        <a asp-page-handler="ManageQuestions">Manage questions, responses, and application build</a>
+    }
+    else
+    {
+        <div class="questionsforms">
+            <p>Use this form to manage questions, to select questions for this year's application, and to select which questions will be scored.</p>
+            <a asp-page-handler="Index">Click to close questions management</a>
+
+            <form class="questions" method="post">
+                <select width="800" asp-for="ManagedQuestionID">
+                    <option value="99999">(Select question to update)</option>
+                    @foreach (Question question in Model.AllQuestions)
+                    {
+                        <option width="800" value="@question.ID">@question.ID.  @question.Prompt</option>
+                    }
+                </select>
+                <button type="submit" asp-page-handler="SelectQuestion">Update Question</button>
+            </form>
+
+            @if (Model.ManagedQuestion != null)
+            {
+                <partial name="_ManageOneQuestionPartial" model="Model.ManagedQuestion" />
+            }
+            else
+            {
+                <partial name="_ManageQuestionsPartial" model="Model.AllQuestions" />
+            }
+        </div>
+    }
+
+
+</section>

@@ -1,0 +1,52 @@
+﻿@model SiltonFoundation.Pages.Admin.IndexModel
+@using Microsoft.AspNetCore.Identity
+@using SiltonFoundation.Models
+@inject UserManager<AppUser> _user
+
+@{
+
+}
+
+
+    <form  class="usermgmt" method="post">
+
+        <fieldset>
+            <select asp-for="ManagedUserEmail">
+                @foreach (AppUser appUser in Model.GeneralUsers)
+                {
+                    string roles = "";
+                    if (await _user.IsInRoleAsync(appUser, "Evaluator"))
+                    {
+                        roles += "(Admin)";
+
+                    }
+                    if (await _user.IsInRoleAsync(appUser, "Evaluator"))
+                    {
+                        roles += " (Board)";
+                    }
+                    <option value="@appUser.Email">@appUser.FirstName @appUser.LastName (@appUser.Email) @roles</option>
+                }
+            </select>
+            <button width="100" type="submit" asp-page-handler="GetProfile">Update User</button>
+            <button width="100" type="submit" asp-page-handler="MakeEval">Assign to Board</button>
+            <button width="100" type="submit" asp-page-handler="RemoveEval">Remove from Board</button>
+            <button width="100" type="submit" asp-page-handler="MakeAdmin">Assign to Admin</button>
+            <button width="100" type="submit" asp-page-handler="RemoveAdmin">Remove from Admin</button>
+        </fieldset>
+        <fieldset>
+            <h3>Admins</h3>
+            <ul>
+                @foreach (AppUser admin in Model.Admins)
+                {
+                    <li>@admin.FirstName @admin.LastName (@admin.Email)</li>
+                }
+            </ul>
+            <h3>Board Members</h3>
+            <ul>
+                @foreach (AppUser member in Model.Evaluators)
+                {
+                    <li>@member.FirstName @member.LastName (@member.Email)</li>
+                }
+            </ul>
+        </fieldset>
+    </form>

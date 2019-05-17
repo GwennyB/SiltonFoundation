@@ -1,0 +1,52 @@
+﻿@model SiltonFoundation.Pages.Admin.IndexModel
+@using SiltonFoundation.Models;
+
+@{
+}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Applicant Name</th>
+                <th>Applicant Email</th>
+                <th>App Status</th>
+                <th>Last Changed</th>
+                <th>Evaluations</th>
+                <th>Award</th>
+                <th>Closed</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (SFApp appl in Model.CurrentApps)
+            {
+                <tr>
+                    @*add 'SendEvals' feature here to create new Evaluation objects once Board is assigned*@
+                    <td>
+                        <form method="post">
+                            <button type="submit" asp-page-handler="GetAppl" title="Click to view applicant's submission">@appl.Name</button>
+                            <input type="hidden" asp-for="ApplicantEmail" value="@appl.Email" />
+                        </form>
+                    </td>
+                    <td>@appl.Email</td>
+                    <td>@appl.AppStatus</td>
+                    <td>@appl.LastChange</td>
+                    <td>
+                        @foreach (Evaluation eval in appl.Evaluations)
+                        {
+                            <p>@eval.Name (Complete: @eval.Closed)</p>
+                        }
+                    </td>
+                        @if (appl.Closed != null)
+                        {
+                            <td>@appl.Amount</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    <td>@appl.Closed</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+

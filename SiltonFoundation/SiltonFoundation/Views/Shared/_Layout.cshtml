@@ -1,0 +1,26 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/css/reset.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="~/css/base.css" rel="stylesheet" />
+    <link href="~/css/layout.css" rel="stylesheet" />
+    <link href="~/css/form.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="~/assets/TSF_Logo.png" alt="The Silton Foundation logo" />
+        </div>
+        <partial name="~/Views/Shared/_NavPartial.cshtml" />
+    </header>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

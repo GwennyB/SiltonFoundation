@@ -1,0 +1,61 @@
+﻿
+@*TODO: Add ViewModel to carry form inputs
+    Update model to ViewModel
+    Add inputs to table cells
+    Retire 'ManageOneQuestionPartial' and associated routes*@
+
+
+
+@model List<SiltonFoundation.Models.Question>
+@using SiltonFoundation.Models;
+
+@*@using SiltonFoundation.Models.Interfaces;
+    @inject IQuestionManager _question*@
+
+@{
+}
+
+
+
+<form class="questions" asp-page-handler="UpdateQuestions" method="post">
+
+    @*<button type="submit">Save Question Assignments</button>*@
+    <table>
+        <thead>
+            <tr>
+                <th>Active</th>
+                <th>Score</th>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Question</th>
+                <th>Response Format</th>
+                <th>Response Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Question question in Model)
+            {
+                <tr>
+                    <td><input type="checkbox" checked="@question.Active" /></td>
+                    <td><input type="checkbox" checked="@question.Score" /></td>
+                    <td>@question.ID</td>
+                    <td>@question.Category</td>
+                    <td>@question.Prompt</td>
+                    <td>@question.ResponseType</td>
+                    <td>
+                        @if (question.ResponseOptions != null)
+                        {
+                            <ul>
+                                @foreach (var item in question.ResponseOptions.Split(", "))
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+

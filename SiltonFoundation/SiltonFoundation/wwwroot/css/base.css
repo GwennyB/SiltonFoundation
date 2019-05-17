@@ -1,0 +1,37 @@
+﻿body {
+    color: black;
+    font-family: 'Oswald', sans-serif;
+}
+
+h2 {
+    margin: 33px;
+    font-size: 40px;
+    color: #9e3424;
+}
+
+p, a {
+    margin: 83px 33px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+}
+
+ul {
+    font-size: 16px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+}
+
+li {
+    margin-top: 22px;
+}
+
+nav > ul {
+    color: white;
+}
+
+nav a {
+    color: white;
+    font-style: none;
+}
+

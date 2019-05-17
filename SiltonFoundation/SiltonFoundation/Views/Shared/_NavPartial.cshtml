@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using SiltonFoundation.Models;
+@inject SignInManager<AppUser> _signIn
+@inject UserManager<AppUser> _user
+
+@{
+    string dashboard = "";
+    @if(_signIn.IsSignedIn(User))
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            dashboard = "/Admin/Index";
+        }
+        else if (User.IsInRole("Evaluator"))
+        {
+            dashboard = "/Evaluator/Index";
+        }
+        else
+        {
+            dashboard = "/Applicant/Index";
+        }
+    }
+}
+
+<nav>
+    <ul>
+        @if (dashboard != "")
+        {
+            <li><a asp-page=@dashboard>My Dashboard</a></li>
+            <li><a asp-controller="Home" asp-action="Logout">Logout</a></li>
+        }
+        <li><a href="https://www.thesiltonfoundation.org">RETURN TO TheSiltonFoundation.org</a></li>
+    </ul>
+</nav>

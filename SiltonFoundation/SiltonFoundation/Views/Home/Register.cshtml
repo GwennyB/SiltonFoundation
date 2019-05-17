@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using SiltonFoundation.Models
+@inject SignInManager<AppUser> signInManager
+@{
+    Layout = "_Layout";
+}
+
+
+
+@if (signInManager.IsSignedIn(User))
+{
+    <h3>Welcome back, @User.Claims.First(c => c.Type == "FullName").Value!</h3>
+    <a asp-controller="Home" asp-action="Index">Take me to my Dashboard</a>
+}
+else
+{
+    <div class="login">
+        <h2>@*Please register to log in.*@</h2>
+        <partial name="~/Views/Shared/_RegisterPartial.cshtml" />
+    </div>
+}
+

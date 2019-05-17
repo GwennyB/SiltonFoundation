@@ -1,0 +1,92 @@
+﻿@page
+@model SiltonFoundation.Pages.Applicant.IndexModel
+@using  SiltonFoundation.Models;
+
+@{
+    Layout = "_Layout";
+}
+
+
+<h2>Applicant Dashboard</h2>
+
+<section class="dash-section manageuser">
+    <h3>Manage Profile</h3>
+    @if (Model.UpdateProfileVM == null)
+    {
+        <form class="usermgmt" method="post">
+            <input type="hidden" asp-for="ManagedUserEmail" value="@User.Identity.Name" />
+            <button type="submit" asp-page-handler="GetProfile">Update My Profile</button>
+        </form>
+    }
+    else
+    {
+        <partial name="_UpdateProfilePartial" model="Model.UpdateProfileVM" />
+    }
+
+</section>
+
+
+<section class="dash-section manageapp">
+    <h3>View/Manage Application</h3>
+    @if (Model.SFAppVM == null)
+    {
+        <div class="notes">
+            <h3>GRANT #1: THE WEST COAST WCS SCHOLARSHIP</h3>
+            <p>Applicants must:</p>
+            <ul>
+                <li>be a legal US resident residing in California, Oregon, or Washington.</li>
+                <li>be at least 18 years of age.</li>
+                <li>demonstrate significant financial need.</li>
+                <li>please see the <span><a href="http://thesiltonfoundation.org/about-the-foundation/">'About' page</a></span> for what's included.</li>
+            </ul>
+
+            <h3>GRANT #2: THE NATIONAL WCS SCHOLARSHIP</h3>
+            <p>Applicants must:</p>
+            <ul>
+                <li>be a legal US resident.</li>
+                <li>be at least 18 years of age.</li>
+                <li>demonstrate significant financial need.</li>
+                <li>please see the <span><a href="http://thesiltonfoundation.org/about-the-foundation/">'About' page</a></span> for what's included.</li>
+            </ul>
+        </div>
+
+
+        <a asp-page-handler="StartApplication"> Click To Launch Application </a>
+    }
+    else
+    {
+        <a asp-page-handler="ViewAppl"> View My Application </a>
+        @if (Model.SFAppVM.Appl.AppStatus == AppStatus.Draft && !Model.PromptSubmit)
+        {
+            <a asp-page-handler="ReadySubmit"> I'm ready to submit My Application </a>
+        }
+
+        @if (Model.PromptSubmit)
+        {
+            <form class="usermgmt submit" method="post">
+                <fieldset>
+                    <p>Are you sure you're ready to submit this application?</p>
+                    <p>Once submitted, the application can no longer be modified. Your responses will be evaluated as they are right now.</p>
+                    <p>If you're ready, click 'Submit Application' below.</p>
+                </fieldset>
+                <fieldset>
+                    <button type="submit" asp-page-handler="SubmitAppl">Submit Application</button>
+                </fieldset>
+            </form>
+        }
+
+    }
+
+    @if (Model.ViewApp || Model.PromptSubmit)
+    {
+        <partial name="_ApplicationPartial" model="Model.SFAppVM" />
+    }
+</section>
+
+    @*<section class="dash-section">
+            <h3>Manage References</h3>
+            <p>Applicant enters references and associated content.</p>
+            <p>QUESTION: Does the web app need to store scanned letters/objects/files other than text?</p>
+            <p>(If yes, we need to discuss storage solutions and associated hosting costs.)</p>
+            <p>IDEA: Can also add a portal for the references to enter content directly instead of giving it to Applicant.</p>
+        </section>*@

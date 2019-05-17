@@ -1,0 +1,10 @@
+﻿@model SiltonFoundation.Models.Question
+@using SiltonFoundation.Models;
+@{
+}
+
+
+    <form method="post">
+        <p>Loading question @Model.ID: @Model.Prompt</p>
+        <button type="submit" asp-page-handler="UpdateQuestion"></button>
+    </form>

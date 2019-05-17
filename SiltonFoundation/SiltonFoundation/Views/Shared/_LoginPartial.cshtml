@@ -1,0 +1,25 @@
+﻿@model SiltonFoundation.Models.ViewModels.LoginViewModel
+
+@{
+}
+
+    <form class="register" method="post">
+
+        <p>Please log in to continue:</p>
+
+        <div asp-validation-summary="All"></div>
+
+        <fieldset>
+            <label asp-for="Email"></label>
+            <input asp-for="Email" />
+        </fieldset>
+
+        <fieldset>
+            <label asp-for="Password"></label>
+            <input asp-for="Password" />
+        </fieldset>
+
+        <button  asp-controller="Home" asp-action="Login" type="submit">Log in</button>
+        <a asp-action="Register">Don't have an account? Click here to register.</a>
+
+    </form>

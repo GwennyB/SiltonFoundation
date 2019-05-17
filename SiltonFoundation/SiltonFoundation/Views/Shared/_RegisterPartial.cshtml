@@ -1,0 +1,74 @@
+﻿@model SiltonFoundation.Models.ViewModels.RegisterViewModel
+@using Microsoft.AspNetCore.Identity
+@using SiltonFoundation.Models
+@inject SignInManager<AppUser> signInManager
+
+@{
+
+}
+
+    <form class="register" method="post" asp-controller="Home" asp-action="Register">
+
+        <p class="formheader">First time here? Please register:</p>
+        
+        <div asp-validation-summary="All"></div>
+                
+        <fieldset>
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" />
+        </fieldset>
+
+        <fieldset>
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" />
+        </fieldset>
+
+        <fieldset>
+            <label asp-for="Birthdate"></label>
+            <input asp-for="Birthdate" />
+        </fieldset>
+
+        <fieldset>
+            <label asp-for="Email"></label>
+            <input asp-for="Email" />
+        </fieldset>
+
+        <fieldset>
+            <label asp-for="Phone"></label>
+            <input asp-for="Phone" />
+        </fieldset>
+
+        <p>(Password must be at least 8 characters with a mix of capital and lowercase letters, numbers, and special characters.)</p>
+        <fieldset>
+            <label asp-for="Password"></label>
+            <input asp-for="Password" />
+        </fieldset>
+
+        <fieldset>
+            <label asp-for="ConfirmPassword"></label>
+            <input asp-for="ConfirmPassword" />
+        </fieldset>
+
+        <br />
+        <p class="formheader">For scholarship applicants:</p>
+        <fieldset>
+            <label asp-for="MailAddress"></label>
+            <input asp-for="MailAddress" />
+        </fieldset>
+
+        <fieldset>
+            <label asp-for="MailCity"></label>
+            <input asp-for="MailCity" />
+        </fieldset>
+        <fieldset>
+            <label asp-for="MailState"></label>
+            <select asp-for="MailState" asp-items="@Html.GetEnumSelectList<SiltonFoundation.Models.State>()"></select>
+
+            <label class="zip" asp-for="MailZip"></label>
+            <input class="zip" asp-for="MailZip" />
+        </fieldset>
+
+        <button type="submit">Create Account</button>
+        <a asp-action="Index">Already have an account? Return to Login.</a>
+
+    </form>

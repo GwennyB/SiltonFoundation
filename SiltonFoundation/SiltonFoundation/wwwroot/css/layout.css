@@ -1,0 +1,36 @@
+﻿header {
+    width: 100%;
+    height: 170px;
+}
+
+.logo {
+    width: 100%;
+    height: 110px;
+    text-align: center;
+}
+
+    .logo > img {
+        display: inline-block;
+        height: 67px;
+        margin-top: 22px;
+    }
+
+nav {
+    background-color: black;
+    width: 100%;
+    height: 60px;
+}
+
+h4 {
+    margin: 0px auto 20px 50px;
+}
+
+.dash-section {
+    margin: 25px;
+    padding: 15px;
+    border: black solid 2px;
+}
+
+    .dash-section > p, .dash-section > h4 {
+        margin: 10px auto 10px 35px;
+    }

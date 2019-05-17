@@ -1,0 +1,99 @@
+﻿@model SiltonFoundation.Models.ViewModels.SFAppViewModel
+@using SiltonFoundation.Models;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> _signInMgr
+@inject UserManager<AppUser> _userMgr
+
+@{
+    AppUser currentUser = await _userMgr.FindByEmailAsync(User.Identity.Name);
+    AppUser currentApplicant = await _userMgr.FindByEmailAsync(Model.Appl.Email);
+    var currentRole = await _userMgr.GetRolesAsync(currentUser);
+    bool applicant = currentUser.Email == Model.Appl.Email ? true : false;
+    bool evaluator = currentRole.Contains("Evaluator") ? true : false;
+    bool admin = currentRole.Contains("Admin") ? true : false;
+    string pageHandler = applicant ? "UpdateAppResponses" : "UpdateAppEvaluations";
+}
+
+<!--  Limit application content viewing to applicant and Board  -->
+@if (applicant || admin || evaluator)
+{
+    <p>Applicant: @Model.Appl.Name</p>
+
+    <form class="appform" method="post" asp-page-handler=@pageHandler>
+        @foreach (string category in Model.Categories)
+        {
+            <div asp-validation-summary="All"></div>
+
+            <fieldset class="category">
+                <h3>@category</h3>
+                @for (int i = 0; i < Model.AppResponses.Count; i++)
+                {
+                    if (Model.Questions[i].Category == category)
+                    {
+                        <fieldset class="qanda">
+                            <label style="white-space: pre-wrap" asp-for="Questions[i].Prompt">@(i + 1).  @Model.Questions[i].Prompt</label>
+                            @if (applicant)
+                            {
+                                <input type="hidden" asp-for="AppResponses[i].ID" />
+                                <input type="hidden" asp-for="AppResponses[i].SFAppID" />
+                                <input type="hidden" asp-for="AppResponses[i].QuestionID" />
+                                @switch (Model.Questions[i].ResponseType)
+                                {
+                                    case ResponseType.Long_Text:
+                                        <textarea asp-for="AppResponses[i].Answer" rows="10" style="white-space: pre-wrap"></textarea>
+                                        break;
+                                    case ResponseType.Short_Text:
+                                        <input asp-for="AppResponses[i].Answer" maxlength="50" />
+                                        break;
+                                    case ResponseType.Select:
+                                        <select asp-for="AppResponses[i].Answer" selected="@Model.AppResponses[i].Answer">
+                                            @foreach (var item in Model.Questions[i].ResponseOptions.Split(','))
+                                            {
+                                                <option value="@item">@item</option>
+                                            }
+                                        </select>
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            @if (evaluator)
+                            {
+                                <p class="viewresponse" style="white-space: pre-wrap">Response: @Model.AppResponses[i].Answer</p>
+                                <label>
+                                    Score
+                                    <select>
+                                        @for (int j = 0; j <= 100; j++)
+                                        {
+                                            <option value="j">@j</option>
+                                        }
+                                    </select>
+                                </label>
+                            }
+                            @*TODO: Activate this section when Evaluation objects have been created*@
+                            @*@if (admin)
+                                {
+                                    foreach (Evaluation eval in Model.Evaluations)
+                                    {
+                                        <p><span>@eval.Name</span>: <span>@eval.Score</span></p>
+                                    }
+                                }*@
+                        </fieldset>
+                    }
+                }
+                @if (!evaluator && Model.Appl.AppStatus == AppStatus.Draft)
+                {
+                    <button type="submit">SAVE CHANGES</button>
+                }
+            </fieldset>
+        }
+
+    </form>
+}
+
+    <!--  Message for unauthorized access attempt  -->
+    @if (!applicant && !admin && !evaluator)
+    {
+        <p>You are not authorized to view this content.</p>
+        <p><a asp-controller="Home" asp-action="Index">Go Home</a></p>
+    }

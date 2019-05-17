@@ -1,0 +1,301 @@
+﻿.login, .register {
+    margin-left: 40px;
+    width: 500px;
+    display: flex;
+    flex-flow: column;
+}
+
+form {
+    box-sizing: border-box;
+    padding: 10px;
+    border: black solid 2px;
+    font-family: 'Lato', sans-serif;
+}
+
+.register {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 20px;
+}
+
+form p {
+    margin: 10px 0px 20px 0px;
+}
+
+p.formheader {
+    margin: 0px 0px 20px 0px;
+    font-weight: bold;
+}
+
+fieldset {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+
+label {
+    display: inline-block;
+    width: 32%;
+}
+
+input {
+    display: inline-block;
+    width: 66%;
+    margin: 10px auto 10px 0px;
+}
+
+label.zip {
+    margin-left: 20px;
+    display: inline-block;
+    width: 10%;
+}
+
+input.zip {
+    display: inline-block;
+    width: 20%;
+}
+
+button {
+    width: 97.5%;
+}
+
+.appform {
+    margin: 20px 40px;
+    border: none;
+}
+
+.category {
+    border: lightgray solid 1px;
+    margin-bottom: 20px;
+    padding: 20px;
+    line-height: 1.5;
+}
+
+    .category > fieldset {
+        margin-bottom: 20px;
+    }
+
+.appform h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.appform label, .appform textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.usermgmt {
+    border: none;
+}
+
+    .usermgmt ul, .usermgmt h3 {
+        display: inline-block;
+        /*justify-content: left;*/
+    }
+
+    .usermgmt ul {
+        margin: 0px auto 20px 20px;
+        width: 70%;
+    }
+
+    .usermgmt h3 {
+        text-align: right;
+        margin: 20px auto 0px 35px;
+        width: 15%;
+        vertical-align: top;
+    }
+
+    .usermgmt select {
+        width: 33%;
+        margin: 20px 10px 20px 35px;
+    }
+
+    .usermgmt button {
+        width: 12%;
+        margin-right: 5px;
+    }
+
+    .usermgmt > fieldset {
+        width: 95%;
+    }
+
+.viewresponse {
+    margin: 0px auto 10px 35px;
+}
+
+fieldset.qanda {
+    margin-bottom: 40px;
+}
+
+.dash-section form.register {
+    border: lightgray solid 1px;
+}
+
+
+
+
+table {
+    margin: 20px 10px 20px 35px;
+    font-family: 'Lato', sans-serif;
+    text-align: left;
+}
+
+th {
+    font-weight: bold;
+}
+
+th, td {
+    padding: 5px 50px 5px 0px;
+}
+
+table form {
+    border: none;
+}
+
+
+table button {
+    width: 100%;
+}
+
+.register a, .register button {
+    margin: 20px auto;
+}
+
+.dash-section > a {
+    display: inline-block;
+    margin: 20px 10px 20px 35px;
+}
+
+.submit p {
+    margin: 10px auto 10px 35px;
+}
+
+.submit button {
+    margin: 10px auto 10px 35px;
+}
+
+.submit {
+    margin-bottom: 50px;
+}
+
+.appform button {
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+.questions {
+    padding: 0px;
+}
+
+    .questions td {
+        padding: 0px 10px 10px 10px;
+        border: lightgray solid 1px;
+    }
+
+
+    .questions ul {
+        display: flex;
+        flex-flow: column;
+    }
+
+    select#ManagedQuestionID, .questions button {
+        width: 96.8%;
+        margin-top: 10px;
+        margin-left: 35px
+    }
+
+.questionsforms form {
+    border: none;
+}
+
+.questionsforms {
+    margin-top: 20px;
+    border: lightgray solid 1px;
+}
+
+    .questionsforms > p {
+        margin: 20px auto 20px 35px;
+    }
+
+.notes p {
+    margin: 20px auto 10px 45px;
+    font-family: 'Lato', sans-serif;
+    text-align: left;
+}
+
+.notes ul {
+    list-style-type: circle;
+    display: flex;
+    flex-flow: column;
+}
+
+.notes li {
+    margin: 10px auto 10px 75px;
+    font-family: 'Lato', sans-serif;
+    text-align: left;
+}
+
+.notes span, .notes a {
+    margin: 0px;
+}
+
+.notes h3 {
+    margin: 30px auto 10px 35px;
+    font-family: 'Lato', sans-serif;
+    text-align: left;
+    font-weight: bold;
+}
+
+.notes {
+    margin-bottom: 10px;
+}
+
+
+
+form ul {
+    display: flex;
+    flex-flow: column;
+}
+
+span.field-validation-error {
+    margin: 0px auto 30px 0px;
+    color: red;
+    font-style: italic;
+    padding-top: 20px;
+}
+
+div.validation-summary-errors {
+    color: red;
+    font-style: italic;
+    margin: 0px auto 30px 32%;
+}
+
+.qanda input {
+    display: block;
+    width: 40%;
+}
+
+.radio {
+    display: flex;
+    width: 30%;
+}
+
+    .radio > label {
+        margin-top: 5px;
+    }
+
+    .radio > input {
+        width: 20%;
+    }
+
+.dash-section > h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.usermgmt > button {
+    width: 20%;
+}
