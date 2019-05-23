@@ -1,7 +1,7 @@
 # The Silton Foundation - Grant Applications (WORK IN PROGRESS)
 This product was commissioned by The Silton Foundation in April 2019 to replace its manual application process with an online, workflow-managed process. TSF-Applications is an ASP.NET Core (MVC + Razor Pages) application built with the AWSSDK-Core and AWS.SimpleEmailService libraries to support deployment and services on AWS. It was deployed using AWS - Elastic Beanstalk to orchestrate the needed AWS services (such as Elastic Container Service (ECS), Relational Database Service (RDS), and service / security groups). 
 
-Deployed on AWS at: http://siltonfoundationapp-env.tv6vfag29m.us-west-2.elasticbeanstalk.com/
+Deployed on AWS at: https://applications.thesiltonfoundation.org/  
 
 ## Getting Started, Build, and Test
 To build and run this page locally (using Visual Studio and SQL Server):
