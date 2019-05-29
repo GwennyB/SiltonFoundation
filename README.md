@@ -26,7 +26,7 @@ Alternately, replace the connection string builders with local connection string
 ## Architecture
 This application is built on ASP.NET Core using Model-View-Controller (MVC) and Razor Pages (MV-VM) architecture. It relies on 2 SQL Server databases - one to manage grant applications, and a separate one to manage user accounts (data security requires separation of these concerns).  Both databases are built using Entity Framework Core.  
   
-Notification emails are automatically generated on registration and application submittal using AWS Simple Email Service.  Future releases are intended to leverage auto-emailer service for a variety of defined data state changes ()
+Notification emails are automatically generated on registration and application submittal using AWS Simple Email Service. Emails are also generated to support password reset feature. Future releases are intended to leverage auto-emailer service for a variety of defined data state changes.
 
 ### User Database
 The User data model contains only basic properties (name and birthdate); however, the Identity API (Microsoft.AspNetCore.Identity) adds properties required in order to support security requirements. A View Model allows the application to capture data to populate the other Identity-initiated properties (ie - password) without having those appear in the User class. User 'claims' are limited to FullName and Email for greeting purposes only.  
