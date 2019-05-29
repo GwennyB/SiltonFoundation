@@ -121,7 +121,7 @@ namespace SiltonFoundation.Pages.Applicant
                                 </html>",
 
                 };
-                bool emailStatus = await Email.Send(message);
+                bool emailStatus = await message.Send();
             }
             else
             {

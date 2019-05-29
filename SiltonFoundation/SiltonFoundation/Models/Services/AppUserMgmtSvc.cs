@@ -114,6 +114,83 @@ namespace SiltonFoundation.Models.Services
             return null;
         }
 
+        public async Task<bool> Register(RegisterViewModel bag)
+        {
+            AppUser user = BuildAppUserFromRVM(bag);
 
+            var query = await _userManager.CreateAsync(user, bag.Password);
+
+            if (query.Succeeded)
+            {
+                bool claims = await CaptureClaims(user);
+
+                // apply user role(s)
+                if (user.Email.ToLower() == "admin@thesiltonfoundation.org")
+                {
+                    await _userManager.AddToRoleAsync(user, AppRoles.Admin);
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, AppRoles.General);
+                }
+
+                // send registration confirmation email
+                bool emailStatus = await SendRegEmail(user.Email);
+
+                // sign in new user
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return true;
+            }
+            return false;
+        }
+
+        private AppUser BuildAppUserFromRVM(RegisterViewModel bag)
+        {
+            AppUser user = new AppUser()
+            {
+                UserName = bag.Email.ToLower(),
+                Email = bag.Email.ToLower(),
+                FirstName = bag.FirstName,
+                LastName = bag.LastName,
+                Birthdate = bag.Birthdate,
+                PhoneNumber = bag.Phone,
+                MailAddress = bag.MailAddress,
+                MailCity = bag.MailCity,
+                MailState = bag.MailState,
+                MailZip = bag.MailZip,
+            };
+
+            return user;
+        }
+
+        private async Task<bool> SendRegEmail(string email)
+        {
+            Email message = new Email()
+            {
+                Recipient = email,
+                ConfigSet = "",
+                Subject = "Your Silton Foundation user registration",
+                BodyHtml = @"<html>
+                            <head></head>
+                            <body>
+                                <p>Your new account has been added to our database and is active.</p>
+                                <p>Thank you for registering!</p>
+                            </body>
+                            </html>",
+            };
+            bool mailStatus = await message.Send();
+            return mailStatus;
+        }
+
+        private async Task<bool> CaptureClaims(AppUser user)
+        {
+            // define and capture claims
+            Claim fullNameClaim = new Claim("FullName", $"{user.FirstName} {user.LastName}");
+            Claim email = new Claim(ClaimTypes.Email, user.Email, ClaimValueTypes.Email);
+
+            // add all claims to DB
+            var query = await _userManager.AddClaimsAsync(user, new List<Claim> { fullNameClaim, email });
+            return (query.Succeeded);
+        }
     }
 }

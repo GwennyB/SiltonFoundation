@@ -20,7 +20,6 @@ namespace SiltonFoundation
             Configuration = configuration;
         }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -49,7 +48,6 @@ namespace SiltonFoundation
             services.AddScoped<IAppResponseManager, AppResponseMgmtSvc>();
             services.AddScoped<IQuestionManager, QuestionMgmtSvc>();
             services.AddScoped<IAppUserManager, AppUserMgmtSvc>();
-
         }
 
 
