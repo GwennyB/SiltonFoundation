@@ -33,6 +33,8 @@ namespace SiltonFoundation.Models.Services
         /// <returns> updated or requested user details with update failure report added </returns>
         public async Task<UpdateProfileViewModel> UpdateUserProfile(UpdateProfileViewModel bag)
         {
+            bag.UpdateFailed = true;
+
             AppUser user = await BuildUserUpdate(bag);
 
             // update profile data in DB
@@ -41,7 +43,11 @@ namespace SiltonFoundation.Models.Services
             // change password if entered and validated
             if (bag.OldPassword != null && bag.NewPassword != null)
             {
-                await _userManager.ChangePasswordAsync(user, bag.OldPassword, bag.NewPassword);
+                var queryPassword = await _userManager.ChangePasswordAsync(user, bag.OldPassword, bag.NewPassword);
+                if (!queryPassword.Succeeded)
+                {
+                    bag.UpdateFailed = true;
+                }
             }
 
             // replace claims
@@ -54,13 +60,8 @@ namespace SiltonFoundation.Models.Services
                 await _userManager.AddClaimsAsync(user, new List<Claim> { fullNameClaim, email });
                 bag = await BuildUPVM(bag.Email);
                 bag.UpdateFailed = false;
+            }
 
-                return bag;
-            }
-            else
-            {
-                bag.UpdateFailed = true;
-            }
             return bag;
         }
 

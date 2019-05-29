@@ -21,7 +21,8 @@ namespace SiltonFoundation.Models
         //    Configuration = configuration;
         //}
 
-        public string Sender { get; set; } = "dougsilton@gmail.com";
+            // TODO: Change 'Sender' to a TSF account before push
+        public string Sender { get; set; } = "gwen@buchthal.com";
         public string Recipient { get; set; }
         public string ConfigSet { get; set; }
         public string Subject { get; set; }
