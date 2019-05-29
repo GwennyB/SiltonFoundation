@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SiltonFoundation.Models;
+using SiltonFoundation.Models.Interfaces;
 using SiltonFoundation.Models.ViewModels;
 
 namespace SiltonFoundation.Controllers
 {
     public class HomeController : Controller
     {
-        private UserManager<AppUser> _userManager;
+        private IAppUserManager _user;
         private SignInManager<AppUser> _signInManager;
 
         /// <summary>
@@ -21,9 +22,9 @@ namespace SiltonFoundation.Controllers
         /// </summary>
         /// <param name="userManager"> user manager service context </param>
         /// <param name="signInManager"> signIn manager service context </param>
-        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public HomeController(IAppUserManager userManager, SignInManager<AppUser> signInManager)
         {
-            _userManager = userManager;
+            _user = userManager;
             _signInManager = signInManager;
         }
 
@@ -86,70 +87,18 @@ namespace SiltonFoundation.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel bag)
         {
+            // if user inputs are valid, attempt registration
             if (ModelState.IsValid)
             {
-                AppUser user = new AppUser()
+                if (await _user.Register(bag))
                 {
-                    UserName = bag.Email.ToLower(),
-                    Email = bag.Email.ToLower(),
-                    FirstName = bag.FirstName,
-                    LastName = bag.LastName,
-                    Birthdate = bag.Birthdate,
-                    PhoneNumber = bag.Phone,
-                    MailAddress = bag.MailAddress,
-                    MailCity = bag.MailCity,
-                    MailState = bag.MailState,
-                    MailZip = bag.MailZip,
-                };
-                
-                var query = await _userManager.CreateAsync(user, bag.Password);
-
-                if (query.Succeeded)
-                {
-                    // define and capture claims
-                    Claim fullNameClaim = new Claim("FullName", $"{user.FirstName} {user.LastName}");
-                    Claim email = new Claim(ClaimTypes.Email, bag.Email, ClaimValueTypes.Email);
-
-                    // add all claims to DB
-                    await _userManager.AddClaimsAsync(user, new List<Claim> { fullNameClaim, email });
-
-                    // apply user role(s)
-                    if (user.Email.ToLower() == "admin@thesiltonfoundation.org")
-                    {
-                        await _userManager.AddToRoleAsync(user, AppRoles.Admin);
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, AppRoles.General);
-                    }
-
-                    // send registration confirmation email
-                    Email message = new Email()
-                    {
-                        Recipient = user.Email,
-                        ConfigSet = "",
-                        Subject = "Your Silton Foundation user registration",
-                        BodyHtml = @"<html>
-                            <head></head>
-                            <body>
-                                <p>Your new account has been added to our database and is active.</p>
-                                <p>Thank you for registering!</p>
-                            </body>
-                            </html>",
-                    };
-                    bool emailStatus = await Email.Send(message);
-
-
-                    // sign in new user
-                    await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToRoute("");
                 }
             }
 
-            // if invalid inputs, try again:
-
+            // if invalid inputs, notify to try again
             ModelState.AddModelError(string.Empty, "Registration failed. Please try again.");
-            return View("~/Views/Home/Register.cshtml");
+            return View("~/Views/Home/Register.cshtml", bag);
         }
 
 
@@ -164,7 +113,7 @@ namespace SiltonFoundation.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel bag)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && bag.Password != null)
             {
                 var query = await _signInManager.PasswordSignInAsync(bag.Email, bag.Password, false, false);
 
@@ -193,6 +142,61 @@ namespace SiltonFoundation.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        [Route("ResetPassword")]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            ChangePasswordViewModel bag = new ChangePasswordViewModel()
+            {
+                Email = email,
+                Token = token,
+            };
+            return View(bag);
+        }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(LoginViewModel bag)
+        {
+            if (ModelState.IsValid)
+            {
+                if (bag.Email != null)
+                {
+                    await _user.SendResetToken(bag.Email);
+                    ModelState.AddModelError(string.Empty, $"Password reset instructions sent to {bag.Email} (if email is associated with an account).");
+                }
+
+            }
+            // data validation will produce ModelState error message if ( email == null )
+            return View("~/Views/Home/Index.cshtml");
+        }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ChangePasswordViewModel bag)
+        {
+            if(ModelState.IsValid)
+            {
+                if (!(await _user.ResetPassword(bag)))
+                {
+                    ModelState.AddModelError(string.Empty, $"Password reset failed. Please try again.");
+                }
+                return RedirectToAction("");
+            }
+            // data validation will produce ModelState error message if ( passwords don't match )
+            return View(bag);
+        }
+
+        //[HttpGet]
+        //[Route("ResetPassword")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> ResetPassword(string email, string token)
+        //{
+        //    return View();
+        //}
 
         // TODO: Add password reset support
 
@@ -201,36 +205,6 @@ namespace SiltonFoundation.Controllers
         //public async Task<IActionResult> PasswordReset()
         //{
         //    return View();
-        //}
-
-
-        //[HttpPost]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> PasswordReset(LoginViewModel bag)
-        //{
-        //    string token = await _userManager.GeneratePasswordResetTokenAsync(await _userManager.FindByEmailAsync(bag.Email));
-        //    // email token
-        //    if(token != null)
-        //    {
-        //        Email message = new Email()
-        //        {
-        //            Recipient = User.Identity.Name,
-        //            ConfigSet = "",
-        //            Subject = "Your Silton Foundation password reset request",
-        //            BodyText = $@"<html>
-        //                        <head></head>
-        //                        <body>
-        //                            <p>Your password reset token is:</p>
-        //                            <p></p>
-        //                            <p>{token}</p>
-        //                            <p></p>
-        //                        </body>
-        //                        </html>",
-
-        //        };
-        //        bool emailStatus = await Email.Send(message);
-        //    }
-        //    return View("~/Home/PasswordReset.cshtml");
         //}
 
         //[HttpPost]

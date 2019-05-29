@@ -20,7 +20,6 @@ namespace SiltonFoundation
             Configuration = configuration;
         }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -28,11 +27,18 @@ namespace SiltonFoundation
                 .AddEntityFrameworkStores<AppUserDbContext>()
                 .AddDefaultTokenProviders();
 
+            // TODO: Switch connection strings back to Prod before deployment
+            //services.AddDbContext<AppUserDbContext>(options =>
+            //    options.UseSqlServer($"Data Source={Configuration["RDS_HOSTNAME"]};Initial Catalog={Configuration["RDS_DBNAME_USER"]};User ID={Configuration["RDS_USERNAME"]};Password={Configuration["RDS_PASSWORD"]}"));
+
+            //services.AddDbContext<ScholarshipDbContext>(options =>
+            //    options.UseSqlServer($"Data Source={Configuration["RDS_HOSTNAME"]};Initial Catalog={Configuration["RDS_DBNAME_SCHOL"]};User ID={Configuration["RDS_USERNAME"]};Password={Configuration["RDS_PASSWORD"]}"));
+
             services.AddDbContext<AppUserDbContext>(options =>
-                options.UseSqlServer($"Data Source={Configuration["RDS_HOSTNAME"]};Initial Catalog={Configuration["RDS_DBNAME_USER"]};User ID={Configuration["RDS_USERNAME"]};Password={Configuration["RDS_PASSWORD"]}"));
+                options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SiltonUser;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
             services.AddDbContext<ScholarshipDbContext>(options =>
-                options.UseSqlServer($"Data Source={Configuration["RDS_HOSTNAME"]};Initial Catalog={Configuration["RDS_DBNAME_SCHOL"]};User ID={Configuration["RDS_USERNAME"]};Password={Configuration["RDS_PASSWORD"]}"));
+                options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SiltonScholarship;Trusted_Connection=True;MultipleActiveResultSets=true"));
 
 
             services.AddMvc();
@@ -42,7 +48,6 @@ namespace SiltonFoundation
             services.AddScoped<IAppResponseManager, AppResponseMgmtSvc>();
             services.AddScoped<IQuestionManager, QuestionMgmtSvc>();
             services.AddScoped<IAppUserManager, AppUserMgmtSvc>();
-
         }
 
 

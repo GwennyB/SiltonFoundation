@@ -1,7 +1,7 @@
 
 {
     "comment" : "This file is used to help set default values when using the dotnet CLI extension Amazon.ElasticBeanstalk.Tools. For more information run \"dotnet eb --help\" from the project root.",
-    "profile" : "GwenBuchthal",
+    "profile" : "TSF-Applications",
     "region"  : "us-west-2",
     "application" : "SiltonFoundationApp",
     "environment" : "Siltonfoundationapp-env",
