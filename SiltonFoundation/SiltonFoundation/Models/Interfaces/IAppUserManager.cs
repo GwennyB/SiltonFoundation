@@ -16,5 +16,7 @@ namespace SiltonFoundation.Models.Interfaces
         Task<AppUser> BuildUserUpdate(UpdateProfileViewModel bag);
         Task<UpdateProfileViewModel> BuildUPVM(string email);
         Task<bool> Register(RegisterViewModel bag);
+        Task SendResetToken(string email);
+        Task<bool> ResetPassword(ChangePasswordViewModel bag);
     }
 }

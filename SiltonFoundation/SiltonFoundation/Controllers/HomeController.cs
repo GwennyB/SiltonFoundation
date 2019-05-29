@@ -113,7 +113,7 @@ namespace SiltonFoundation.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel bag)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && bag.Password != null)
             {
                 var query = await _signInManager.PasswordSignInAsync(bag.Email, bag.Password, false, false);
 
@@ -142,6 +142,61 @@ namespace SiltonFoundation.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        [Route("ResetPassword")]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            ChangePasswordViewModel bag = new ChangePasswordViewModel()
+            {
+                Email = email,
+                Token = token,
+            };
+            return View(bag);
+        }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(LoginViewModel bag)
+        {
+            if (ModelState.IsValid)
+            {
+                if (bag.Email != null)
+                {
+                    await _user.SendResetToken(bag.Email);
+                    ModelState.AddModelError(string.Empty, $"Password reset instructions sent to {bag.Email} (if email is associated with an account).");
+                }
+
+            }
+            // data validation will produce ModelState error message if ( email == null )
+            return View("~/Views/Home/Index.cshtml");
+        }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ChangePasswordViewModel bag)
+        {
+            if(ModelState.IsValid)
+            {
+                if (!(await _user.ResetPassword(bag)))
+                {
+                    ModelState.AddModelError(string.Empty, $"Password reset failed. Please try again.");
+                }
+                return RedirectToAction("");
+            }
+            // data validation will produce ModelState error message if ( passwords don't match )
+            return View(bag);
+        }
+
+        //[HttpGet]
+        //[Route("ResetPassword")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> ResetPassword(string email, string token)
+        //{
+        //    return View();
+        //}
 
         // TODO: Add password reset support
 
@@ -150,36 +205,6 @@ namespace SiltonFoundation.Controllers
         //public async Task<IActionResult> PasswordReset()
         //{
         //    return View();
-        //}
-
-
-        //[HttpPost]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> PasswordReset(LoginViewModel bag)
-        //{
-        //    string token = await _userManager.GeneratePasswordResetTokenAsync(await _userManager.FindByEmailAsync(bag.Email));
-        //    // email token
-        //    if(token != null)
-        //    {
-        //        Email message = new Email()
-        //        {
-        //            Recipient = User.Identity.Name,
-        //            ConfigSet = "",
-        //            Subject = "Your Silton Foundation password reset request",
-        //            BodyText = $@"<html>
-        //                        <head></head>
-        //                        <body>
-        //                            <p>Your password reset token is:</p>
-        //                            <p></p>
-        //                            <p>{token}</p>
-        //                            <p></p>
-        //                        </body>
-        //                        </html>",
-
-        //        };
-        //        bool emailStatus = await Email.Send(message);
-        //    }
-        //    return View("~/Home/PasswordReset.cshtml");
         //}
 
         //[HttpPost]

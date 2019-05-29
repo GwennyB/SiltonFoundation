@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using SiltonFoundation.Models.Interfaces;
 using SiltonFoundation.Models.ViewModels;
 using System;
@@ -193,5 +194,54 @@ namespace SiltonFoundation.Models.Services
             var query = await _userManager.AddClaimsAsync(user, new List<Claim> { fullNameClaim, email });
             return (query.Succeeded);
         }
+
+        public async Task SendResetToken(string email)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                // create password reset token
+                string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                // email token
+                Dictionary<string,string> queryString = new Dictionary<string, string>()
+                {
+                    {"email", email },
+                    {"token", token }
+                };
+                //string resetURL = QueryHelpers.AddQueryString("https://applications.thesiltonfoundation.org/ResetPassword", queryString);
+                string resetURL = QueryHelpers.AddQueryString("https://localhost:44379/ResetPassword", queryString);
+                Email message = new Email()
+                {
+                    Recipient = email,
+                    ConfigSet = "",
+                    Subject = "Your Silton Foundation password reset token",
+                    BodyHtml = $@"<html>
+                            <head></head>
+                            <body>
+                                <p>Your password reset token is:</p>
+                                <h3>{token}</h3>
+                                <br>
+                                <p>Copy the token and <a href={resetURL}>CLICK HERE</a> to reset your password:</p>
+                                
+                            </ body>
+                            </html>"
+                };
+                bool mailStatus = await message.Send();
+            }
+        }
+
+        public async Task<bool> ResetPassword(ChangePasswordViewModel bag)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(bag.Email);
+            if ( (await _userManager.ResetPasswordAsync(user, bag.Token, bag.Password)).Succeeded )
+            {
+                user = await _userManager.FindByEmailAsync(bag.Email);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return true;
+            }
+            return false;
+        }
+
     }
 }
