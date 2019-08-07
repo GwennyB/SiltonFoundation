@@ -12,7 +12,8 @@ using SiltonFoundation.Models.ViewModels;
 
 namespace SiltonFoundation.Pages.Applicant
 {
-    [Authorize(Roles = "Applicant, General")]
+    //[Authorize(Roles = "Applicant, General")]
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
 
